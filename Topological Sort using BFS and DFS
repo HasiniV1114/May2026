@@ -1,0 +1,45 @@
+//Khan's Algorithm
+
+class Solution:
+    def topoSort(self, V, edges):
+        # Code here
+        indeg=[0]*V
+        adj=[[] for _ in range(V)]
+        for u,v in edges:
+            adj[u].append(v)
+            indeg[v]+=1
+        q=[]
+        for i in range(V):
+            if indeg[i]==0:
+                q.append(i)
+        res=[]
+        while q:
+            node=q.pop(0)
+            res.append(node)
+            for nei in adj[node]:
+                indeg[nei]-=1
+                if indeg[nei]==0:
+                    q.append(nei)
+        return res
+
+//Topological Sort
+It is a sorting algorithm for a graph that makes an order for the edges.
+We can use this algorithm only in a directed Acyclic Graph(DAG).
+class Solution:
+    def topoSort(self, V, edges):
+        # Code here
+        adj=[[] for _ in range(V)]
+        for u,v in edges:
+            adj[u].append(v)
+        visited=[False]*V
+        stack=[]
+        def dfs(node):
+            visited[node]=True
+            for nei in adj[node]:
+                if not visited[nei]:
+                    dfs(nei)
+            stack.append(node)
+        for i in range(V):
+            if not visited[i]:
+                dfs(i)
+        return stack[::-1]
