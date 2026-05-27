@@ -1,0 +1,42 @@
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        from typing import List
+from collections import defaultdict
+
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        
+        wordset = set(wordList)
+        if endWord not in wordset:
+            return []
+
+        par = defaultdict(list)
+        lev = set([beginWord])
+        found = False
+        while lev and not found:
+            next_level = set()
+            for word in lev:
+                if word in wordset:
+                    wordset.remove(word)
+            for word in lev:
+                for i in range(len(word)):
+                    for ch in 'abcdefghijklmnopqrstuvwxyz':
+                        nw = word[:i] + ch + word[i+1:]
+                        if nw in wordset:
+                            if nw not in par:
+                                par[nw] = []
+                            par[nw].append(word)
+                            next_level.add(nw)
+                            if nw == endWord:
+                                found = True
+            lev = next_level
+        res = []
+        def dfs(word, path):
+            if word == beginWord:
+                res.append(path[::-1])
+                return
+            for p in par[word]:
+                dfs(p, path + [p])
+        if found:
+            dfs(endWord, [endWord])
+        return res
